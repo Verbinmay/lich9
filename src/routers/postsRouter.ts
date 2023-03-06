@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { serialize } from "v8";
-import { authMiddleware } from "../middlewares/authMiddleware";
+import { AccessTokenMiddleware } from "../middlewares/authMiddleware";
 import { basicValidationMiddleware } from "../middlewares/basicMiddleware";
 import {
   contentCommentCreateValidation,
@@ -164,7 +164,7 @@ postsRouter.delete(
 
 postsRouter.post(
   "/:postId/comments",
-  authMiddleware,
+  AccessTokenMiddleware,
   contentCommentCreateValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {

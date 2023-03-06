@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { authMiddleware } from "../middlewares/authMiddleware";
+import { AccessTokenMiddleware } from "../middlewares/authMiddleware";
 import {
   contentCommentCreateValidation,
   inputValidationMiddleware,
@@ -34,7 +34,7 @@ commentsRouter.get("/:id", async (req: Request, res: Response) => {
 //PUT
 commentsRouter.put(
   "/:commentId",
-  authMiddleware,
+  AccessTokenMiddleware,
   contentCommentCreateValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
@@ -63,7 +63,7 @@ commentsRouter.put(
 //DELETE
 commentsRouter.delete(
   "/:commentId",
-  authMiddleware,
+  AccessTokenMiddleware,
   async (req: Request, res: Response) => {
     const commentFind: CommentDBModel | null =
       await commentsRepository.findCommentById(req.params.commentId);

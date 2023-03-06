@@ -55,6 +55,7 @@ export type SecurityDevicesModel = {
     title: string;
     lastActiveDate: string;
     deviceId: string;
+    userId: string;
     _id: ObjectId;
 };
 

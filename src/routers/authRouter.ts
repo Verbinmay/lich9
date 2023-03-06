@@ -3,7 +3,7 @@ import { emailsAdapter } from "../adapters/emailAdapter";
 import { registrationMessage } from "../adapters/messages";
 import { jwtService } from "../application/jwtService";
 import { errorMaker, tokenCreator } from "../functions";
-import { authMiddleware } from "../middlewares/authMiddleware";
+import {AccessTokenMiddleware, RefreshTokenMiddleware} from "../middlewares/authMiddleware";
 import {
   emailCreateValidation,
   inputValidationMiddleware,
@@ -45,51 +45,20 @@ authRouter.post(
     }
   }
 );
-authRouter.post("/refresh-token", async (req: Request, res: Response) => {
-  const userFindId: string | null = await jwtService.getUserIdByToken(
-    req.cookies.refreshToken
-  );
-  if (!userFindId) {
-    res.send(401);
-    return;
-  }
-  const match: AuthDBModel | null = await authService.matchToken(
-    userFindId,
-    req.cookies.refreshToken
-  );
+authRouter.post("/refresh-token",RefreshTokenMiddleware, async (req: Request, res: Response) => {
 
-  if (match) {
-    const newTokens: CreatedTokenModel = await tokenCreator(userFindId);
+
+    const newTokens: CreatedTokenModel = await tokenCreator(req.user.userId);
 
     res.cookie("refreshToken", newTokens.refreshToken, {
       httpOnly: true,
       secure: true,
     });
     res.status(200).send(newTokens.accessToken);
-  } else {
-    res.send(401);
-  }
 });
 
-authRouter.post("/logout", async (req: Request, res: Response) => {
-  const userFindId: string | null = await jwtService.getUserIdByToken(
-    req.cookies.refreshToken
-  );
-  if (!userFindId) {
-    res.send(401);
-    return;
-  }
-  const userFind: AuthDBModel | null = await authService.matchToken(
-    userFindId,
-    req.cookies.refreshToken
-  );
-
-  if (!userFind) {
-    res.send(401);
-    return;
-  }
-
-  const tokenRevoked = await authRepository.deleteRefreshToken(userFind.id);
+authRouter.post("/logout", RefreshTokenMiddleware, async (req: Request, res: Response) => {
+  const tokenRevoked = await authRepository.deleteRefreshToken(req.user.id);
   if (tokenRevoked) {
     res.send(204);
   } else {
@@ -97,7 +66,7 @@ authRouter.post("/logout", async (req: Request, res: Response) => {
   }
 });
 
-authRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
+authRouter.get("/me", AccessTokenMiddleware, async (req: Request, res: Response) => {
   const authGet: UserDBModel | null = await usersRepository.findUserById(
     req.user.id
   );
