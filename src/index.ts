@@ -20,7 +20,7 @@ app.use (jsonBodyMiddleware)
 app.use(cookieParser())
 
 
-
+app.set('trust proxy', true)
 //прописываем наши роуты
 app.use('/blogs', blogsRouter) 
 app.use('/posts', postsRouter) 
