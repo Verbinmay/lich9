@@ -22,7 +22,15 @@ export const securityDevicesService = {
   async checkUserDevices(userId: string, deviceId: string) {
     const result: SecurityDevicesDBModel | null =
       await securityDevicesRepository.findSessionByDeviceId(deviceId);
-    return result ? result.userId === userId : false;
+    if (result) {
+      if (result.userId === userId) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   },
   async deleteSessionsByDeviceId(deviceId: string) {
     const result: boolean =

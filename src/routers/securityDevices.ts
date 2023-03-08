@@ -29,14 +29,14 @@ securityRouter.delete("/devices", RefreshTokenMiddleware, async (req: Request, r
 
 securityRouter.delete("/devices/:deviceId", RefreshTokenMiddleware, async (req: Request, res: Response) => {
 
-const userDevicesCheck= await securityDevicesService.checkUserDevices(req.user.userId, req.params.deviceId)
+const userDevicesCheck: boolean= await securityDevicesService.checkUserDevices(req.user.userId, req.params.deviceId)
 if (!userDevicesCheck){
     res.send(403)
     return
 }
 
     const sessionDelete: boolean = await securityDevicesService.deleteSessionsByDeviceId(req.params.deviceId)
-    sessionDelete ? res.send(204) : res.send(404)
+   if (sessionDelete) { res.send(204)} else {res.send(404)}
 
 })
 
