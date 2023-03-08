@@ -1,7 +1,7 @@
 import { JwtPayload } from "jsonwebtoken";
 import { jwtService } from "../application/jwtService";
 import { securityDevicesRepository } from "../repositories/securityDevicesRepository";
-import { SecurityDevicesModel } from "../types/dbType";
+import { SecurityDevicesDBModel } from "../types/dbType";
 
 export const securityDevicesService = {
   async deleteSessions(userId: string, iat: number) {
@@ -20,7 +20,7 @@ export const securityDevicesService = {
   },
 
   async checkUserDevices(userId: string, deviceId: string) {
-    const result: SecurityDevicesModel | null =
+    const result: SecurityDevicesDBModel | null =
       await securityDevicesRepository.findSessionByDeviceId(deviceId);
     return result ? result.userId === userId : false;
   },

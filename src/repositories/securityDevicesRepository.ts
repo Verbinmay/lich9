@@ -1,15 +1,15 @@
 import { securityDevicesCollections } from "./db";
-import { SecurityDevicesModel } from "../types/dbType";
+import { SecurityDevicesDBModel } from "../types/dbType";
 import { JwtPayload } from "jsonwebtoken";
 
 export const securityDevicesRepository = {
   async findSessionsById(id: string) {
-    const result: Array<SecurityDevicesModel> | null =
+    const result: Array<SecurityDevicesDBModel> | null =
       await securityDevicesCollections.find({ userId: id }).toArray();
     return result;
   },
   async checkRefreshTokenEqual(iat: number, deviceId: string, userId: string) {
-    const result: SecurityDevicesModel | null =
+    const result: SecurityDevicesDBModel | null =
       await securityDevicesCollections.findOne({
         lastActiveDate: iat.toString(),
         deviceId: deviceId,
@@ -32,7 +32,7 @@ export const securityDevicesRepository = {
     return result.deletedCount === 1;
   },
   async findSessionByDeviceId(deviceId: string) {
-    const result: SecurityDevicesModel | null =
+    const result: SecurityDevicesDBModel | null =
       await securityDevicesCollections.findOne({ deviceId: deviceId });
     return result;
   },
@@ -62,4 +62,6 @@ export const securityDevicesRepository = {
     );
     return result.matchedCount === 1;
   },
+
+  
 };

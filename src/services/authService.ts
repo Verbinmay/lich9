@@ -122,18 +122,5 @@ export const authService = {
     return userUpdate;
   },
 
-  //MATCH TOKEN
-  async matchToken(id: string, refreshToken: string) {
-    const userFind: AuthDBModel | null = await authRepository.findAuthByUserId(
-      id
-    );
-    if (userFind) {
-      const result = userFind.token === refreshToken;
-      if (result) {
-        return userFind;
-      } else return null;
-    } else {
-      return null;
-    }
-  },
+  
 };

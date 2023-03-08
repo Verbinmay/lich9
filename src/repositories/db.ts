@@ -4,8 +4,9 @@ import {
     AuthDBModel,
     BlogDBModel,
     CommentDBModel,
+    IpDataDBModel,
     PostDBModel,
-    SecurityDevicesModel,
+    SecurityDevicesDBModel,
     UserDBModel
 } from "../types/dbType";
 
@@ -30,7 +31,9 @@ export const commentsCollections = db
 export const authCollections = db
     .collection<AuthDBModel>("Auth");
 export const securityDevicesCollections = db
-    .collection<SecurityDevicesModel>("SecurityDevices");
+    .collection<SecurityDevicesDBModel>("SecurityDevices");
+export const ipDataCollections = db
+    .collection<IpDataDBModel>("ipData");
 
 
 export async function runDb() {
