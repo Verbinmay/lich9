@@ -1,33 +1,65 @@
-import {securityDevicesCollections} from "./db";
-import {SecurityDevicesModel} from "../types/dbType";
+import { securityDevicesCollections } from "./db";
+import { SecurityDevicesModel } from "../types/dbType";
+import { JwtPayload } from "jsonwebtoken";
 
 export const securityDevicesRepository = {
-    async findSessionsById(id: string) {
-        const result: Array<SecurityDevicesModel> | null = await securityDevicesCollections.find({userId: id}).toArray()
-        return result
-    },
-    async checkRefreshTokenEqual(userId: string, deviceId: string, iat: number) {
-        const result: SecurityDevicesModel | null = await securityDevicesCollections.findOne({
-            userId: userId,
-            deviceId: deviceId,
-            lastActiveDate: iat.toString()
-        })
-        return result != null
-    },
-    async deleteSessions(userId: string, iat: number) {
-        const result = await securityDevicesCollections.deleteMany({
-            userId: userId,
-            lastActiveDate: {$ne: iat.toString()}
-        })
-        return result.deletedCount === 1
-    },
-    async findSessionByDeviceId(deviceId: string) {
-        const result: SecurityDevicesModel | null = await securityDevicesCollections.findOne({deviceId: deviceId})
-        return result
-    },
-    async deleteSessionsByDeviceId( deviceId:string){
-        const result = await securityDevicesCollections.deleteOne({deviceId: deviceId})
-        return result.deletedCount === 1
-    }
-
-}
+  async findSessionsById(id: string) {
+    const result: Array<SecurityDevicesModel> | null =
+      await securityDevicesCollections.find({ userId: id }).toArray();
+    return result;
+  },
+  async checkRefreshTokenEqual(iat: number, deviceId: string, userId: string) {
+    const result: SecurityDevicesModel | null =
+      await securityDevicesCollections.findOne({
+        lastActiveDate: iat.toString(),
+        deviceId: deviceId,
+        userId: userId,
+      });
+    return result != null;
+  },
+  async deleteSessions(userId: string, iat: number) {
+    const result = await securityDevicesCollections.deleteMany({
+      userId: userId,
+      lastActiveDate: { $ne: iat.toString() },
+    });
+    return result.acknowledged ;
+  },
+  async deleteSessionLogout(userId: string, iat: number) {
+    const result = await securityDevicesCollections.deleteOne({
+      userId: userId,
+      lastActiveDate: iat.toString() ,
+    });
+    return result.deletedCount === 1;
+  },
+  async findSessionByDeviceId(deviceId: string) {
+    const result: SecurityDevicesModel | null =
+      await securityDevicesCollections.findOne({ deviceId: deviceId });
+    return result;
+  },
+  async deleteSessionsByDeviceId(deviceId: string) {
+    const result = await securityDevicesCollections.deleteOne({
+      deviceId: deviceId,
+    });
+    return result.deletedCount === 1;
+  },
+  async createSession(newSession: any) {
+    const result = await securityDevicesCollections.insertOne(newSession);
+    return result.acknowledged;
+  },
+  async updateSessionRefreshInfo(iatOldSession: number, decoded: JwtPayload) {
+    const result = await securityDevicesCollections.updateOne(
+      {
+        lastActiveDate: iatOldSession.toString(),
+        deviceId: decoded.deviceId!,
+        userId: decoded.userId!,
+      },
+      {
+        $set: {
+          lastActiveDate: decoded.iat!.toString(),
+          expireDate: decoded.exp!.toString(),
+        },
+      }
+    );
+    return result.matchedCount === 1;
+  },
+};

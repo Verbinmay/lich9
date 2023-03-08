@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import {setting} from "../settings";
 import {securityDevicesRepository} from "../repositories/securityDevicesRepository";
+import jwtDecode, { JwtPayload } from "jwt-decode";
 
 export const jwtService = {
     async createJWTAccesToken(id: string) {
@@ -11,8 +12,8 @@ export const jwtService = {
     },
 
 
-    async createJWTRefreshToken( deviceId: string, id: string, date: number) {
-        const token = jwt.sign({ deviceId: deviceId, userId: id, iat: date}, setting.JWT_SECRET, {
+    async createJWTRefreshToken( deviceId: string, userId: string, ) {
+        const token = jwt.sign({ deviceId: deviceId, userId: userId}, setting.JWT_SECRET, {
             expiresIn: "20s",
         });
         return token;
@@ -22,8 +23,8 @@ export const jwtService = {
         const result = jwt.verify(token, setting.JWT_SECRET);
         if (typeof result !== "string") {
 
-            if (result.deviceId && result.iat) {
-                const session: boolean = await securityDevicesRepository.checkRefreshTokenEqual(result.userId, result.deviceId, result.iat)
+            if (result.deviceId) {
+                const session: boolean = await securityDevicesRepository.checkRefreshTokenEqual(result.iat!, result.deviceId, result.userId)
                 if (session) {
                     return result
 
@@ -33,4 +34,8 @@ export const jwtService = {
         return null
 
     },
+    async decoderJWTs(token:string){
+        const result:JwtPayload = await jwtDecode(token)
+        return result
+    }
 };

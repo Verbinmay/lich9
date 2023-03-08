@@ -20,9 +20,9 @@ export function errorMaker(msg: string, field: string, ...strings: any[]) {
   return { errorsMessages: arrayErrors };
 }
 
-export async function tokenCreator(id: string, deviceId:string, iat:number) {
-  const tokenAccess = await jwtService.createJWTAccesToken(id);
-  const tokenRefresh = await jwtService.createJWTRefreshToken(id,deviceId,iat);
+export async function tokenCreator(userId: string, deviceId:string) {
+  const tokenAccess = await jwtService.createJWTAccesToken(userId);
+  const tokenRefresh = await jwtService.createJWTRefreshToken(userId,deviceId);
 
   return {
     accessToken: { accessToken: tokenAccess },

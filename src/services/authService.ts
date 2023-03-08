@@ -6,18 +6,46 @@ import { AuthDBModel, UserDBModel } from "../types/dbType";
 import { v4 as uuidv4 } from "uuid";
 import add from "date-fns/add";
 import { tokenCreator } from "../functions";
+import { CreatedTokenModel } from "../types/authType";
+import { securityDevicesService } from "./securityDevicesService";
+import { JwtPayload } from "jsonwebtoken";
 
 export const authService = {
   //AUTHPOST
-  async postAuth(loginOrEmail: string, password: string) {
+  async postAuth(
+    loginOrEmail: string,
+    password: string,
+    ip: string,
+    title: string
+  ) {
     const userFindLoginOrEmail: UserDBModel | null =
       await authRepository.findUserByLoginOrEmail(loginOrEmail);
     if (userFindLoginOrEmail) {
-      const match:boolean = await bcrypt.compare(password, userFindLoginOrEmail.hash);
-
+      const match: boolean = await bcrypt.compare(
+        password,
+        userFindLoginOrEmail.hash
+      );
       if (match) {
-       const result = await tokenCreator(userFindLoginOrEmail.id)
-       return result
+        const deviceId: string = uuidv4.toString();
+        const result: CreatedTokenModel = await tokenCreator(
+          userFindLoginOrEmail.id,
+          deviceId
+        );
+        const decoder:JwtPayload = await jwtService.decoderJWTs(result.refreshToken);
+        if (decoder) {
+          const sessionCreate: boolean =
+            await securityDevicesService.createSession(
+              decoder.iat!,
+              decoder.exp!,
+              ip,
+              title,
+              deviceId,
+              userFindLoginOrEmail.id
+            );
+          return sessionCreate ? result : null;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
@@ -96,13 +124,14 @@ export const authService = {
 
   //MATCH TOKEN
   async matchToken(id: string, refreshToken: string) {
-    const userFind:AuthDBModel|null = await authRepository.findAuthByUserId(id);
+    const userFind: AuthDBModel | null = await authRepository.findAuthByUserId(
+      id
+    );
     if (userFind) {
       const result = userFind.token === refreshToken;
-      if(result){
-return userFind
-      } else 
-      return null ;
+      if (result) {
+        return userFind;
+      } else return null;
     } else {
       return null;
     }

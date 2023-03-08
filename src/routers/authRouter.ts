@@ -3,7 +3,10 @@ import { emailsAdapter } from "../adapters/emailAdapter";
 import { registrationMessage } from "../adapters/messages";
 import { jwtService } from "../application/jwtService";
 import { errorMaker, tokenCreator } from "../functions";
-import {AccessTokenMiddleware, RefreshTokenMiddleware} from "../middlewares/authMiddleware";
+import {
+  AccessTokenMiddleware,
+  RefreshTokenMiddleware,
+} from "../middlewares/authMiddleware";
 import {
   emailCreateValidation,
   inputValidationMiddleware,
@@ -15,6 +18,7 @@ import {
 import { authRepository } from "../repositories/authRepository";
 import { usersRepository } from "../repositories/usersRepository";
 import { authService } from "../services/authService";
+import { securityDevicesService } from "../services/securityDevicesService";
 import {
   CreatedTokenModel,
   LoginSuccessViewModel,
@@ -32,7 +36,9 @@ authRouter.post(
   async (req: Request, res: Response) => {
     const authPost: CreatedTokenModel | null = await authService.postAuth(
       req.body.loginOrEmail,
-      req.body.password
+      req.body.password,
+      req.ip,
+      req.headers["user-agent"] ? req.headers["user-agent"] : "default"
     );
     if (authPost) {
       res.cookie("refreshToken", authPost.refreshToken, {
@@ -45,38 +51,55 @@ authRouter.post(
     }
   }
 );
-authRouter.post("/refresh-token",RefreshTokenMiddleware, async (req: Request, res: Response) => {
-
-
-    const newTokens: CreatedTokenModel = await tokenCreator(req.user.userId);
-
+authRouter.post(
+  "/refresh-token",
+  RefreshTokenMiddleware,
+  async (req: Request, res: Response) => {
+    const newTokens: CreatedTokenModel = await tokenCreator(
+      req.user.userId,
+      req.user.deviceId
+    );
+    const refreshTokenChanged: boolean =
+      await securityDevicesService.changeRefreshTokenInfo(
+        newTokens.refreshToken,
+        req.user.iat
+      );
     res.cookie("refreshToken", newTokens.refreshToken, {
       httpOnly: true,
       secure: true,
     });
     res.status(200).send(newTokens.accessToken);
-});
-
-authRouter.post("/logout", RefreshTokenMiddleware, async (req: Request, res: Response) => {
-  const tokenRevoked = await authRepository.deleteRefreshToken(req.user.id);
-  if (tokenRevoked) {
-    res.send(204);
-  } else {
-    res.send(401);
   }
-});
+);
 
-authRouter.get("/me", AccessTokenMiddleware, async (req: Request, res: Response) => {
-  const authGet: UserDBModel | null = await usersRepository.findUserById(
-    req.user.id
-  );
-  const viewAuthGet: MeViewModel = {
-    email: authGet!.email,
-    login: authGet!.login,
-    userId: authGet!.id,
-  };
-  res.status(200).send(viewAuthGet);
-});
+authRouter.post(
+  "/logout",
+  RefreshTokenMiddleware,
+  async (req: Request, res: Response) => {
+    const tokenRevoked = await securityDevicesService.deleteSessionLogout(req.user.iat, req.user.id);
+    if (tokenRevoked) {
+      res.send(204);
+    } else {
+      res.send(401);
+    }
+  }
+);
+
+authRouter.get(
+  "/me",
+  AccessTokenMiddleware,
+  async (req: Request, res: Response) => {
+    const authGet: UserDBModel | null = await usersRepository.findUserById(
+      req.user.id
+    );
+    const viewAuthGet: MeViewModel = {
+      email: authGet!.email,
+      login: authGet!.login,
+      userId: authGet!.id,
+    };
+    res.status(200).send(viewAuthGet);
+  }
+);
 
 //REGISTRATION in the system. Email with confirmation code will be send to passed email address
 authRouter.post(
