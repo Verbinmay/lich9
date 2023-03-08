@@ -41,7 +41,7 @@ commentsRouter.put(
     const commentFind: CommentDBModel | null =
       await commentsRepository.findCommentById(req.params.commentId);
     if (commentFind) {
-      if (commentFind.commentatorInfo.userId === req.user.id) {
+      if (commentFind.commentatorInfo.userId === req.user.userId) {
         const commentUpdate: boolean = await commentsService.updateComment(
           commentFind.id,
           req.body.content
@@ -68,7 +68,7 @@ commentsRouter.delete(
     const commentFind: CommentDBModel | null =
       await commentsRepository.findCommentById(req.params.commentId);
     if (commentFind) {
-      if (commentFind.commentatorInfo.userId === req.user.id) {
+      if (commentFind.commentatorInfo.userId === req.user.userId) {
         const commentDelete: boolean = await commentsService.deleteComment(
           commentFind.id
         );

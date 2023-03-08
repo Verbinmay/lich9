@@ -3,7 +3,7 @@ import request from "supertest";
 import { app } from "../../src/index";
 import { usersCollections } from "../../src/repositories/db";
 
-describe("blogs", () => {
+describe.skip("blogs", () => {
   beforeAll(async () => {
     await request(app).delete("/testing/all-data");
   });

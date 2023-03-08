@@ -22,7 +22,7 @@ export const securityDevicesRepository = {
       userId: userId,
       lastActiveDate: { $ne: iat.toString() },
     });
-    return result.acknowledged ;
+    return result.deletedCount>0;
   },
   async deleteSessionLogout(userId: string, iat: number) {
     const result = await securityDevicesCollections.deleteOne({
@@ -44,7 +44,7 @@ export const securityDevicesRepository = {
   },
   async createSession(newSession: any) {
     const result = await securityDevicesCollections.insertOne(newSession);
-    return result.acknowledged;
+    return result.insertedId?true:false;
   },
   async updateSessionRefreshInfo(iatOldSession: number, decoded: JwtPayload) {
     const result = await securityDevicesCollections.updateOne(

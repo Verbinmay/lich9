@@ -175,7 +175,7 @@ postsRouter.post(
     if (postGetById) {
       const commentPostPostId = await postsService.createCommentsByPostId(
         req.body.content,
-        req.user,
+        req.user.userId,
         postGetById.id
       );
 

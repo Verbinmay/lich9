@@ -1,5 +1,6 @@
 import { blogsRepository } from "../repositories/blogsRepository";
 import { postsRepository } from "../repositories/postsRepository";
+import { usersRepository } from "../repositories/usersRepository";
 import { BlogDBModel, CommentDBModel, UserDBModel } from "../types/dbType";
 
 export const postsService = {
@@ -30,7 +31,7 @@ export const postsService = {
     content: string,
     blogId: string
   ) {
-    const blogName =( await blogsRepository.findBlogById(blogId))!.name
+    const blogName = (await blogsRepository.findBlogById(blogId))!.name;
     const result: boolean = await postsRepository.updatePost(
       id,
       title,
@@ -51,14 +52,15 @@ export const postsService = {
   //POSTCOMMENTSBYPOSTID
   async createCommentsByPostId(
     content: string,
-    user: UserDBModel,
+    userId: string,
     postId: string
   ) {
+    const user: UserDBModel | null = await usersRepository.findUserById(userId);
     const createdComment = {
       content: content,
       commentatorInfo: {
-        userId: user.id,
-        userLogin: user.login,
+        userId: userId,
+        userLogin: user!.login,
       },
       createdAt: new Date().toISOString(),
       postId: postId,

@@ -15,6 +15,6 @@ export const ipDataRepository = {
         data: Date.now()
     }
     const result = await ipDataCollections.insertOne(newIpData)
-    return result.acknowledged
+    return result.insertedId? true:false
   }
 };

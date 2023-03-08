@@ -80,7 +80,7 @@ authRouter.post(
   async (req: Request, res: Response) => {
     const tokenRevoked = await securityDevicesService.deleteSessionLogout(
       req.user.iat,
-      req.user.id
+      req.user.userId
     );
     if (tokenRevoked) {
       res.send(204);
@@ -95,7 +95,7 @@ authRouter.get(
   AccessTokenMiddleware,
   async (req: Request, res: Response) => {
     const authGet: UserDBModel | null = await usersRepository.findUserById(
-      req.user.id
+      req.user.userId
     );
     const viewAuthGet: MeViewModel = {
       email: authGet!.email,
