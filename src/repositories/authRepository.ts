@@ -32,9 +32,4 @@ export const authRepository = {
     });
     return result;
   },
-
- 
-  
-
- 
 };

@@ -15,6 +15,7 @@ import {
   passwordCreateValidation,
   passwordValidation,
 } from "../middlewares/inputValidationMiddleware";
+import { ipDataMiddleware } from "../middlewares/ipDataMiddleware";
 import { authRepository } from "../repositories/authRepository";
 import { usersRepository } from "../repositories/usersRepository";
 import { authService } from "../services/authService";
@@ -30,6 +31,7 @@ export const authRouter = Router({});
 
 authRouter.post(
   "/login",
+  ipDataMiddleware,
   loginOrEmailValidation,
   passwordValidation,
   inputValidationMiddleware,
@@ -76,7 +78,10 @@ authRouter.post(
   "/logout",
   RefreshTokenMiddleware,
   async (req: Request, res: Response) => {
-    const tokenRevoked = await securityDevicesService.deleteSessionLogout(req.user.iat, req.user.id);
+    const tokenRevoked = await securityDevicesService.deleteSessionLogout(
+      req.user.iat,
+      req.user.id
+    );
     if (tokenRevoked) {
       res.send(204);
     } else {
@@ -104,6 +109,7 @@ authRouter.get(
 //REGISTRATION in the system. Email with confirmation code will be send to passed email address
 authRouter.post(
   "/registration",
+  ipDataMiddleware,
   loginCreateValidation,
   passwordCreateValidation,
   emailCreateValidation,
@@ -149,6 +155,7 @@ authRouter.post(
 //CONFIRM registration
 authRouter.post(
   "/registration-confirmation",
+  ipDataMiddleware,
   async (req: Request, res: Response) => {
     const confirmPost = await authService.confirmEmail(req.body.code);
     if (confirmPost) {
@@ -169,6 +176,7 @@ authRouter.post(
 //REGISTRATION EMAIL RESENDING
 authRouter.post(
   "/registration-email-resending",
+  ipDataMiddleware,
   async (req: Request, res: Response) => {
     const emailResendingPost = await authService.resendingEmail(req.body.email);
     if (emailResendingPost) {
