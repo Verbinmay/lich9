@@ -12,7 +12,7 @@ import { securityRouter } from './routers/securityDevices';
 
 
 export const app = express()
-const port = process.env.PORT || 4001
+const port = process.env.PORT || 5001
 ;
 
 const jsonBodyMiddleware = bodyParser.json()

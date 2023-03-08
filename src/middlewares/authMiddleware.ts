@@ -12,15 +12,16 @@ export const AccessTokenMiddleware = async (
     res.send(401);
     return;
   }
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = req.headers.authorization.split(" ")[1];
 
   const verify: JwtPayload | null = await jwtService.verifyToken(token!);
   if (verify) {
     req.user = verify;
     next();
     return;
+  } else {
+    res.send(401);
   }
-  res.send(401);
 };
 
 export const RefreshTokenMiddleware = async (
@@ -39,6 +40,7 @@ export const RefreshTokenMiddleware = async (
     req.user = verify;
     next();
     return;
+  } else {
+    res.send(401);
   }
-  res.send(401);
 };

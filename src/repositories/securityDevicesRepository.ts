@@ -15,7 +15,7 @@ export const securityDevicesRepository = {
         deviceId: deviceId,
         userId: userId,
       });
-    return result != null;
+    return (result !== null);
   },
   async deleteSessions(userId: string, iat: number) {
     const result = await securityDevicesCollections.deleteMany({
