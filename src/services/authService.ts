@@ -26,7 +26,7 @@ export const authService = {
         userFindLoginOrEmail.hash
       );
       if (match) {
-        const deviceId: string = uuidv4();
+        const deviceId: string = uuidv4().toString();
         const result: CreatedTokenModel = await tokenCreator(
           userFindLoginOrEmail.id,
           deviceId
