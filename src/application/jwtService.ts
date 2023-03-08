@@ -8,11 +8,11 @@ export const jwtService = {
             expiresIn: "10s",
         });
         return token;
-    }
-    ,
+    },
 
-    async createJWTRefreshToken(id: string, date: number, deviceId: string) {
-        const token = jwt.sign({userId: id, deviceId: deviceId, iat: date}, setting.JWT_SECRET, {
+
+    async createJWTRefreshToken( deviceId: string, id: string, date: number) {
+        const token = jwt.sign({ deviceId: deviceId, userId: id, iat: date}, setting.JWT_SECRET, {
             expiresIn: "20s",
         });
         return token;

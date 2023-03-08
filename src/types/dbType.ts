@@ -54,6 +54,7 @@ export type SecurityDevicesModel = {
     ip: string;
     title: string;
     lastActiveDate: string;
+    expireDate:string
     deviceId: string;
     userId: string;
     _id: ObjectId;

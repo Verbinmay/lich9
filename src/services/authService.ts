@@ -13,7 +13,7 @@ export const authService = {
     const userFindLoginOrEmail: UserDBModel | null =
       await authRepository.findUserByLoginOrEmail(loginOrEmail);
     if (userFindLoginOrEmail) {
-      const match = await bcrypt.compare(password, userFindLoginOrEmail.hash);
+      const match:boolean = await bcrypt.compare(password, userFindLoginOrEmail.hash);
 
       if (match) {
        const result = await tokenCreator(userFindLoginOrEmail.id)

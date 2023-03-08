@@ -20,13 +20,10 @@ export function errorMaker(msg: string, field: string, ...strings: any[]) {
   return { errorsMessages: arrayErrors };
 }
 
-export async function tokenCreator(id: string) {
+export async function tokenCreator(id: string, deviceId:string, iat:number) {
   const tokenAccess = await jwtService.createJWTAccesToken(id);
-  const tokenRefresh = await jwtService.createJWTRefreshToken(id);
-  const refreshTokenInDB = await authRepository.addRefreshToken(
-    id,
-    tokenRefresh
-  );
+  const tokenRefresh = await jwtService.createJWTRefreshToken(id,deviceId,iat);
+
   return {
     accessToken: { accessToken: tokenAccess },
     refreshToken: tokenRefresh,
