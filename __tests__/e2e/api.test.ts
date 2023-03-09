@@ -1,13 +1,13 @@
 import { beforeEach } from "node:test";
 import supertest from "supertest";
-import  app  from "../../src/index";
+import app from "../../src/index";
 
-const agent = supertest.agent(app)
+const agent = supertest.agent(app);
 let cookie: string[] = [];
+let cookie2: string[] = [];
 
-export  function toGetToken(resultLogin: any) {
-  const Reftokn = resultLogin.headers["set-cookie"]  
-  // [0];
+export function toGetToken(resultLogin: any) {
+  const Reftokn = resultLogin.headers["set-cookie"];
   const tok = Reftokn[0].split(";")[0];
   return tok;
 }
@@ -1499,236 +1499,14 @@ export  function toGetToken(resultLogin: any) {
 //       .expect(404);
 //   });
 // });
-
-// describe.skip("auth", () => {
-//   beforeEach(async () => {
-//     await request(app).delete("/testing/all-data");
-//   });
-//   it("return 200 POSTAUTH", async () => {
-//     const result = await request(app)
-//       .post("/users")
-//       .send({
-//         login: "markooo",
-//         password: "123456",
-//         email: "markdlnv@gmail.com",
-//       })
-//       .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-//       .expect(201);
-
-//     const result2 = await request(app)
-//       .post("/auth/login")
-//       .send({
-//         loginOrEmail: "markdlnv@gmail.com",
-//         password: "123456",
-//       })
-//       .expect(200);
-
-//     expect(result2.body).toEqual({
-//       accessToken: expect.any(String),
-//     });
-//   });
-
-//   it("return 400 POSTAUTH login", async () => {
-//     const result2 = await request(app)
-//       .post("/auth/login")
-//       .send({
-//         loginOrEmail: 345544,
-//         password: "123456",
-//       })
-//       .expect(400);
-//   });
-
-//   it("return 400 POSTAUTH password", async () => {
-//     const result2 = await request(app)
-//       .post("/auth/login")
-//       .send({
-//         loginOrEmail: "markdlnv@gmail.com",
-//         password: 123456,
-//       })
-//       .expect(400);
-//   });
-
-//   it("return 401 POSTAUTH ", async () => {
-//     const result2 = await request(app)
-//       .post("/auth/login")
-//       .send({
-//         loginOrEmail: "markdlnv@gmail.com",
-//         password: "123456-10000-1000",
-//       })
-//       .expect(401);
-//   });
-
-//   it("return 200 GETAUTH", async () => {
-//     const result = await request(app)
-//       .post("/users")
-//       .send({
-//         login: "markizd",
-//         password: "123456u",
-//         email: "markdlnv@yahoo.com",
-//       })
-//       .set("Authorization", "Basic YWRtaW46cXdlcnR5")
-//       .expect(201);
-
-//     const result2 = await request(app)
-//       .post("/auth/login")
-//       .send({
-//         loginOrEmail: "markdlnv@yahoo.com",
-//         password: "123456u",
-//       })
-//       .expect(200);
-
-//     const result3 = await request(app)
-//       .get("/auth/me")
-//       .set("Authorization", "Bearer " + result2.body.accessToken)
-//       .expect(200);
-
-//     expect(result3.body).toEqual({
-//       email: "markdlnv@yahoo.com",
-//       login: "markizd",
-//       userId: result.body.id,
-//     });
-//   });
-
-//   it("return 204 POSTAUTHREGISTRATION", async () => {
-//     const result = await request(app)
-//       .post("/auth/registration")
-//       .send({
-//         login: "markizdd",
-//         password: "123456u",
-//         email: "kootvfa@yahoo.com",
-//       })
-//       .expect(204);
-//   });
-
-//   it("return 400 POSTAUTHREGISTRATION login min/max", async () => {
-//     const result = await request(app)
-//       .post("/auth/registration")
-//       .send({
-//         login: "ma",
-//         password: "123456u",
-//         email: "markdlnv@yahoo.com",
-//       })
-//       .expect(400);
-
-//     const result2 = await request(app)
-//       .post("/auth/registration")
-//       .send({
-//         login: "markmarkmarkmarkmarkmark",
-//         password: "123456u",
-//         email: "markdlnv@yahoo.com",
-//       })
-//       .expect(400);
-//   });
-//   it("return 400 POSTAUTHREGISTRATION password min/max", async () => {
-//     const result = await request(app)
-//       .post("/auth/registration")
-//       .send({
-//         login: "markix",
-//         password: "12345",
-//         email: "markdlnv@yahoo.com",
-//       })
-//       .expect(400);
-
-//     const result2 = await request(app)
-//       .post("/auth/registration")
-//       .send({
-//         login: "markix",
-//         password: "1234567891011121314151617181920",
-//         email: "markdlnv@yahoo.com",
-//       })
-//       .expect(400);
-//   });
-//   it("return 400 POSTAUTHREGISTRATION email ", async () => {
-//     const result = await request(app)
-//       .post("/auth/registration")
-//       .send({
-//         login: "markix",
-//         password: "123456",
-//         email: "markjj",
-//       })
-//       .expect(400);
-//   });
-//   it("return 204 REGISTRATION CONFIRMATION POST ", async () => {
-//     const result = await request(app)
-//       .post("/auth/registration")
-//       .send({
-//         login: "egorus",
-//         password: "123456u",
-//         email: "egorvoron@gmail.com",
-//       })
-//       .expect(204);
-
-//     const result2 = await usersCollections.findOne({
-//       email: "egorvoron@gmail.com",
-//     });
-
-//     const result3 = await request(app)
-//       .post("/auth/registration-confirmation")
-//       .send({
-//         code: result2!.emailConfimation.confimationCode,
-//       })
-//       .expect(204);
-//   });
-//   it("return 400 REGISTRATION CONFIRMATION POST use code after used  ", async () => {
-//     const result = await request(app)
-//       .post("/auth/registration")
-//       .send({
-//         login: "mariavog",
-//         password: "123456u",
-//         email: "mariavog@gmail.com",
-//       })
-//       .expect(204);
-
-//     const result2 = await usersCollections.findOne({
-//       email: "mariavog@gmail.com",
-//     });
-
-//     const result3 = await request(app)
-//       .post("/auth/registration-confirmation")
-//       .send({
-//         code: result2!.emailConfimation.confimationCode,
-//       })
-//       .expect(204);
-
-//     const result4 = await request(app)
-//       .post("/auth/registration-confirmation")
-//       .send({
-//         code: result2!.emailConfimation.confimationCode,
-//       })
-//       .expect(400);
-//   });
-
-//   jest.setTimeout(8000);
-//   it("return 204 REGISTRATION  EMAIL RESENDING ", async () => {
-//     const result = await request(app)
-//       .post("/auth/registration")
-//       .send({
-//         login: "katerina",
-//         password: "123456u",
-//         email: "katerinagot@gmail.com",
-//       })
-//       .expect(204);
-//     const result2 = await usersCollections.findOne({
-//       email: "katerinagot@gmail.com",
-//     });
-//     const result3 = await request(app)
-//       .post("/auth/registration-email-resending")
-//       .send({ email: "katerinagot@gmail.com" })
-//       .expect(204);
-
-//     const result4 = await usersCollections.findOne({
-//       email: "katerinagot@gmail.com",
-//     });
-//     expect(result2?.emailConfimation.confimationCode).not.toEqual(
-//       result4?.emailConfimation.confimationCode
-//     );
-//   });
-// });
-describe("auth", () => {
-  beforeAll(async () => {
-    await agent.delete("/testing/all-data").expect(204);
-
-    const result = await agent.post("/users")
+//_________________________________________
+describe.skip("auth", () => {
+  beforeEach(async () => {
+    await agent.delete("/testing/all-data");
+  });
+  it("return 200 POSTAUTH", async () => {
+    const result = await agent
+      .post("/users")
       .send({
         login: "markooo",
         password: "123456",
@@ -1745,24 +1523,316 @@ describe("auth", () => {
       })
       .expect(200);
 
+    expect(result2.body).toEqual({
+      accessToken: expect.any(String),
+    });
+  });
+//---------------------------------------
+  // it("return 400 POSTAUTH login", async () => {
+  //   const result2 = await request(app)
+  //     .post("/auth/login")
+  //     .send({
+  //       loginOrEmail: 345544,
+  //       password: "123456",
+  //     })
+  //     .expect(400);
+  // });
 
+  // it("return 400 POSTAUTH password", async () => {
+  //   const result2 = await request(app)
+  //     .post("/auth/login")
+  //     .send({
+  //       loginOrEmail: "markdlnv@gmail.com",
+  //       password: 123456,
+  //     })
+  //     .expect(400);
+  // });
 
-      const token = toGetToken(result2)
+  // it("return 401 POSTAUTH ", async () => {
+  //   const result2 = await request(app)
+  //     .post("/auth/login")
+  //     .send({
+  //       loginOrEmail: "markdlnv@gmail.com",
+  //       password: "123456-10000-1000",
+  //     })
+  //     .expect(401);
+  // });
 
-      cookie = result2.get('Set-Cookie')
-      
+  // it("return 200 GETAUTH", async () => {
+  //   const result = await request(app)
+  //     .post("/users")
+  //     .send({
+  //       login: "markizd",
+  //       password: "123456u",
+  //       email: "markdlnv@yahoo.com",
+  //     })
+  //     .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+  //     .expect(201);
+
+  //   const result2 = await request(app)
+  //     .post("/auth/login")
+  //     .send({
+  //       loginOrEmail: "markdlnv@yahoo.com",
+  //       password: "123456u",
+  //     })
+  //     .expect(200);
+
+  //   const result3 = await request(app)
+  //     .get("/auth/me")
+  //     .set("Authorization", "Bearer " + result2.body.accessToken)
+  //     .expect(200);
+
+  //   expect(result3.body).toEqual({
+  //     email: "markdlnv@yahoo.com",
+  //     login: "markizd",
+  //     userId: result.body.id,
+  //   });
+  // });
+
+  // it("return 204 POSTAUTHREGISTRATION", async () => {
+  //   const result = await request(app)
+  //     .post("/auth/registration")
+  //     .send({
+  //       login: "markizdd",
+  //       password: "123456u",
+  //       email: "kootvfa@yahoo.com",
+  //     })
+  //     .expect(204);
+  // });
+
+  // it("return 400 POSTAUTHREGISTRATION login min/max", async () => {
+  //   const result = await request(app)
+  //     .post("/auth/registration")
+  //     .send({
+  //       login: "ma",
+  //       password: "123456u",
+  //       email: "markdlnv@yahoo.com",
+  //     })
+  //     .expect(400);
+
+  //   const result2 = await request(app)
+  //     .post("/auth/registration")
+  //     .send({
+  //       login: "markmarkmarkmarkmarkmark",
+  //       password: "123456u",
+  //       email: "markdlnv@yahoo.com",
+  //     })
+  //     .expect(400);
+  // });
+  // it("return 400 POSTAUTHREGISTRATION password min/max", async () => {
+  //   const result = await request(app)
+  //     .post("/auth/registration")
+  //     .send({
+  //       login: "markix",
+  //       password: "12345",
+  //       email: "markdlnv@yahoo.com",
+  //     })
+  //     .expect(400);
+
+  //   const result2 = await request(app)
+  //     .post("/auth/registration")
+  //     .send({
+  //       login: "markix",
+  //       password: "1234567891011121314151617181920",
+  //       email: "markdlnv@yahoo.com",
+  //     })
+  //     .expect(400);
+  // });
+  // it("return 400 POSTAUTHREGISTRATION email ", async () => {
+  //   const result = await request(app)
+  //     .post("/auth/registration")
+  //     .send({
+  //       login: "markix",
+  //       password: "123456",
+  //       email: "markjj",
+  //     })
+  //     .expect(400);
+  // });
+  // it("return 204 REGISTRATION CONFIRMATION POST ", async () => {
+  //   const result = await request(app)
+  //     .post("/auth/registration")
+  //     .send({
+  //       login: "egorus",
+  //       password: "123456u",
+  //       email: "egorvoron@gmail.com",
+  //     })
+  //     .expect(204);
+
+  //   const result2 = await usersCollections.findOne({
+  //     email: "egorvoron@gmail.com",
+  //   });
+
+  //   const result3 = await request(app)
+  //     .post("/auth/registration-confirmation")
+  //     .send({
+  //       code: result2!.emailConfimation.confimationCode,
+  //     })
+  //     .expect(204);
+  // });
+  // it("return 400 REGISTRATION CONFIRMATION POST use code after used  ", async () => {
+  //   const result = await request(app)
+  //     .post("/auth/registration")
+  //     .send({
+  //       login: "mariavog",
+  //       password: "123456u",
+  //       email: "mariavog@gmail.com",
+  //     })
+  //     .expect(204);
+
+  //   const result2 = await usersCollections.findOne({
+  //     email: "mariavog@gmail.com",
+  //   });
+
+  //   const result3 = await request(app)
+  //     .post("/auth/registration-confirmation")
+  //     .send({
+  //       code: result2!.emailConfimation.confimationCode,
+  //     })
+  //     .expect(204);
+
+  //   const result4 = await request(app)
+  //     .post("/auth/registration-confirmation")
+  //     .send({
+  //       code: result2!.emailConfimation.confimationCode,
+  //     })
+  //     .expect(400);
+  // });
+
+  // jest.setTimeout(8000);
+  // it("return 204 REGISTRATION  EMAIL RESENDING ", async () => {
+  //   const result = await request(app)
+  //     .post("/auth/registration")
+  //     .send({
+  //       login: "katerina",
+  //       password: "123456u",
+  //       email: "katerinagot@gmail.com",
+  //     })
+  //     .expect(204);
+  //   const result2 = await usersCollections.findOne({
+  //     email: "katerinagot@gmail.com",
+  //   });
+  //   const result3 = await request(app)
+  //     .post("/auth/registration-email-resending")
+  //     .send({ email: "katerinagot@gmail.com" })
+  //     .expect(204);
+
+  //   const result4 = await usersCollections.findOne({
+  //     email: "katerinagot@gmail.com",
+  //   });
+  //   expect(result2?.emailConfimation.confimationCode).not.toEqual(
+  //     result4?.emailConfimation.confimationCode
+  //   );
+  // });
+});
+describe.skip("authLOOOOOGIN", () => {
+  beforeAll(async () => {
+    await agent.delete("/testing/all-data").expect(204);
+
+    const result = await agent
+      .post("/users")
+      .send({
+        login: "markooo",
+        password: "123456",
+        email: "markdlnv@gmail.com",
+      })
+      .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+      .expect(201);
+
+    const result2 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(200);
+
+    cookie = result2.get("Set-Cookie");
   });
 
   jest.setTimeout(30000);
   it("return 200 REFRESHTOKEN", async () => {
     const result3 = await agent
-    .post("/auth/refresh-token")
-    .set('Cookie', cookie)
-    .expect(200)
-
-    console.log(result3)
+      .post("/auth/refresh-token")
+      .set("Cookie", cookie)
+      .expect(200);
   });
 });
+describe.skip("authREFRESHTOKEN", () => {
+  beforeAll(async () => {
+    await agent.delete("/testing/all-data").expect(204);
+
+    const result = await agent
+      .post("/users")
+      .send({
+        login: "markooo",
+        password: "123456",
+        email: "markdlnv@gmail.com",
+      })
+      .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+      .expect(201);
+
+    const result2 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(200);
+
+    cookie = result2.get("Set-Cookie");
+  });
+
+  jest.setTimeout(30000);
+  it("return 200 REFRESHTOKEN", async () => {
+    const result3 = await agent
+      .post("/auth/refresh-token")
+      .set("Cookie", cookie)
+      .expect(200);
+  });
+});
+describe.skip("SECURITYGET", () => {
+  beforeAll(async () => {
+    await agent.delete("/testing/all-data").expect(204);
+
+    const result = await agent
+      .post("/users")
+      .send({
+        login: "markooo",
+        password: "123456",
+        email: "markdlnv@gmail.com",
+      })
+      .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+      .expect(201);
+
+    const result2 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(200);
+
+    cookie = result2.get("Set-Cookie");
+  });
+
+  it("return 200 ", async () => {
+    const result3 = await agent
+      .get("/security/devices")
+      .set("Cookie", cookie)
+      const hhh = result3
+      
+      expect(result3.body).toEqual([
+      {
+        ip: expect.any(String),
+        title: expect.any(String),
+        deviceId: expect.any(String),
+        lastActiveDate: expect.any(String),
+      },
+    ]);
+  });
+});
+
+
 // describe.skip("comments", () => {
 //   beforeEach(() => jest.setTimeout(8000)),
 //     beforeEach(async () => {

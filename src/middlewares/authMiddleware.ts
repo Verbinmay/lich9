@@ -36,6 +36,7 @@ export const RefreshTokenMiddleware = async (
   const verify: JwtPayload | null = await jwtService.verifyToken(
     req.cookies.refreshToken!
   );
+ 
   if (verify) {
     req.user = verify;
     next();

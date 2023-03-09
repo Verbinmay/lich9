@@ -3,9 +3,10 @@ import { SecurityDevicesDBModel } from "../types/dbType";
 import { JwtPayload } from "jsonwebtoken";
 
 export const securityDevicesRepository = {
-  async findSessionsById(id: string) {
+  async findSessionsById(userId: string) {
     const result: Array<SecurityDevicesDBModel> | null =
-      await securityDevicesCollections.find({ userId: id }).toArray();
+      await securityDevicesCollections.find({ userId: userId }).toArray();
+    
     return result;
   },
   async checkRefreshTokenEqual(iat: number, deviceId: string, userId: string) {
