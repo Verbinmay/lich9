@@ -15,19 +15,19 @@ export const securityDevicesRepository = {
         deviceId: deviceId,
         userId: userId,
       });
-    return (result !== null);
+    return result != null;
   },
   async deleteSessions(userId: string, iat: number) {
     const result = await securityDevicesCollections.deleteMany({
       userId: userId,
       lastActiveDate: { $ne: iat.toString() },
     });
-    return result.deletedCount>0;
+    return result.deletedCount > 0;
   },
   async deleteSessionLogout(userId: string, iat: number) {
     const result = await securityDevicesCollections.deleteOne({
       userId: userId,
-      lastActiveDate: iat.toString() ,
+      lastActiveDate: iat.toString(),
     });
     return result.deletedCount === 1;
   },
@@ -44,7 +44,7 @@ export const securityDevicesRepository = {
   },
   async createSession(newSession: any) {
     const result = await securityDevicesCollections.insertOne(newSession);
-    return result.insertedId?true:false;
+    return result.insertedId ? true : false;
   },
   async updateSessionRefreshInfo(iatOldSession: number, decoded: JwtPayload) {
     const result = await securityDevicesCollections.updateOne(
@@ -62,6 +62,4 @@ export const securityDevicesRepository = {
     );
     return result.matchedCount === 1;
   },
-
-  
 };

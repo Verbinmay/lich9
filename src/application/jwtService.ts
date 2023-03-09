@@ -23,7 +23,7 @@ export const jwtService = {
   },
   async verifyToken(token: string) {
     try {
-      const result = jwt.verify(token, setting.JWT_SECRET);
+      const result = await jwt.verify(token, setting.JWT_SECRET);
       if (typeof result !== "string") {
         if (result.deviceId) {
           const session: boolean =

@@ -63,5 +63,6 @@ export type SecurityDevicesDBModel = {
 export type IpDataDBModel = {
   ip: string;
   data: number;
+  route:string
   _id: ObjectId;
 };
