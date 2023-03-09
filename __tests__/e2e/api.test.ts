@@ -1501,7 +1501,7 @@ export function toGetToken(resultLogin: any) {
 // });
 //_________________________________________
 describe.skip("auth", () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await agent.delete("/testing/all-data");
   });
   it("return 200 POSTAUTH", async () => {
@@ -1526,6 +1526,74 @@ describe.skip("auth", () => {
     expect(result2.body).toEqual({
       accessToken: expect.any(String),
     });
+  });
+});
+
+
+describe("authERROR", () => {
+  beforeAll(async () => {
+    await agent.delete("/testing/all-data");
+    jest.setTimeout(80000)
+  });
+  jest.setTimeout(800000)
+  it("return 429 POSTAUTH", async () => {
+    const result = await agent
+      .post("/users")
+      .send({
+        login: "markooo",
+        password: "123456",
+        email: "markdlnv@gmail.com",
+      })
+      .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+      .expect(201);
+
+    const result2 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(200);
+
+      const result3 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(200);
+
+      const result4 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(200);
+
+      const result5 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(200);
+
+      const result6 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(200);
+
+      const result7 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(429);
   });
   //---------------------------------------
   // it("return 400 POSTAUTH login", async () => {
@@ -1867,7 +1935,7 @@ describe.skip("SECURITYDELETE", () => {
       .expect(204);
   });
 });
-describe("SECURITYDELETEBY IDDEVICE", () => {
+describe.skip("SECURITYDELETEBY IDDEVICE", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 

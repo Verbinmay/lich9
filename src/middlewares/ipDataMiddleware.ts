@@ -6,7 +6,7 @@ export const ipDataMiddleware = async (
   next: NextFunction
 ) => {
   const route = (req.url ).toString()
-  const timeInSec = 10;
+  const timeInSec = 60;
   const attempts = 5;
   const ipDataCheck: boolean = await ipDataRepository.checkIpData(
     req.ip,
