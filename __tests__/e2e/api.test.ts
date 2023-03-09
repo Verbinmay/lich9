@@ -500,7 +500,7 @@ describe.skip("blogs", () => {
   });
 });
 
-describe("post", () => {
+describe.skip("post", () => {
   beforeAll(async () => {
     await request(app).delete("/testing/all-data");
   });
@@ -1492,7 +1492,7 @@ describe.skip("Users", () => {
   });
 });
 
-describe.skip("auth", () => {
+describe("auth", () => {
   beforeAll(async () => {
     await request(app).delete("/testing/all-data");
   });
@@ -1706,7 +1706,8 @@ describe.skip("auth", () => {
       .post("/auth/registration-email-resending")
       .send({ email: "katerinagot@gmail.com" })
       .expect(204);
-
+      
+      
     const result4 = await usersCollections.findOne({
       email: "katerinagot@gmail.com",
     });
@@ -1714,6 +1715,13 @@ describe.skip("auth", () => {
       result4?.emailConfimation.confimationCode
     );
   });
+
+
+  //__________-
+  // it("return 20 REFRESH TOKEN", async ()=>{
+
+
+  // })
 });
 
 describe.skip("comments", () => {
