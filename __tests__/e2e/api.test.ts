@@ -1121,7 +1121,7 @@ describe.skip("post", () => {
       .set("Authorization", "Bearer " + result4.body.accessToken)
       .expect(400);
 
-      const result7 = await request(app)
+    const result7 = await request(app)
       .post("/auth/login")
       .send({
         loginOrEmail: "kate23@yahoo.com",
@@ -1166,8 +1166,7 @@ describe.skip("post", () => {
       .send({
         content: "Nu takoe ya smotret ne budu",
       })
-      .set("Authorization", "Bearer YWRtaW46cXdlcnR5")
- 
+      .set("Authorization", "Bearer YWRtaW46cXdlcnR5");
   });
 
   it("return 404 POSTCOMMENTSBYPOSTID", async () => {
@@ -1706,8 +1705,7 @@ describe("auth", () => {
       .post("/auth/registration-email-resending")
       .send({ email: "katerinagot@gmail.com" })
       .expect(204);
-      
-      
+
     const result4 = await usersCollections.findOne({
       email: "katerinagot@gmail.com",
     });
@@ -1716,10 +1714,8 @@ describe("auth", () => {
     );
   });
 
-
   //__________-
   // it("return 20 REFRESH TOKEN", async ()=>{
-
 
   // })
 });

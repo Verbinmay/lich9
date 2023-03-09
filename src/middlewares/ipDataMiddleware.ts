@@ -5,17 +5,19 @@ export const ipDataMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
+  const route = (req.url ).toString()
   const timeInSec = 10;
   const attempts = 5;
   const ipDataCheck: boolean = await ipDataRepository.checkIpData(
     req.ip,
     timeInSec,
-    attempts
+    attempts,
+    route,
   );
   if (!ipDataCheck) {
     res.send(429);
     return;
   }
-  const ipDataAdd: boolean = await ipDataRepository.addIpData(req.ip);
+  const ipDataAdd: boolean = await ipDataRepository.addIpData(req.ip, route);
   ipDataAdd ? next() : res.send(429);
 };
