@@ -4,7 +4,7 @@ import { JwtPayload } from "jsonwebtoken";
 
 export const securityDevicesRepository = {
   async findSessionsById(userId: string) {
-    const result: Array<SecurityDevicesDBModel> | null =
+    const result: Array<SecurityDevicesDBModel> =
       await securityDevicesCollections.find({ userId: userId }).toArray();
     
     return result;

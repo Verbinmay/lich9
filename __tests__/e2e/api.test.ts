@@ -1500,7 +1500,7 @@ export function toGetToken(resultLogin: any) {
 //   });
 // });
 //_________________________________________
-describe.skip("auth", () => {
+describe("auth", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data");
   });
@@ -1792,7 +1792,7 @@ describe("authERROR", () => {
   //   );
   // });
 });
-describe.skip("authLOOOOOGIN", () => {
+describe("authLOOOOOGIN", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 
@@ -1825,7 +1825,7 @@ describe.skip("authLOOOOOGIN", () => {
       .expect(200);
   });
 });
-describe.skip("authREFRESHTOKEN", () => {
+describe("authREFRESHTOKEN", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 
@@ -1858,7 +1858,7 @@ describe.skip("authREFRESHTOKEN", () => {
       .expect(200);
   });
 });
-describe.skip("SECURITYGET", () => {
+describe("SECURITYGET", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 
@@ -1897,7 +1897,7 @@ describe.skip("SECURITYGET", () => {
     ]);
   });
 });
-describe.skip("SECURITYDELETE", () => {
+describe("SECURITYDELETE", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 
@@ -1935,7 +1935,7 @@ describe.skip("SECURITYDELETE", () => {
       .expect(204);
   });
 });
-describe.skip("SECURITYDELETEBY IDDEVICE", () => {
+describe("SECURITYDELETEBY IDDEVICE", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 

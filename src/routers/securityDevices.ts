@@ -10,12 +10,11 @@ securityRouter.get(
   "/devices",
   RefreshTokenMiddleware,
   async (req: Request, res: Response) => {
-    
     const devicesFind = await securityDevicesRepository.findSessionsById(
       req.user.userId
     );
 
-    if (devicesFind) {
+    if (devicesFind.length !== 0) {
       const session = devicesFind.map((t) => {
         return {
           ip: t.ip,
