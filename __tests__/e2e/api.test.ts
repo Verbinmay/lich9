@@ -1527,7 +1527,7 @@ describe.skip("auth", () => {
       accessToken: expect.any(String),
     });
   });
-//---------------------------------------
+  //---------------------------------------
   // it("return 400 POSTAUTH login", async () => {
   //   const result2 = await request(app)
   //     .post("/auth/login")
@@ -1816,12 +1816,10 @@ describe.skip("SECURITYGET", () => {
   });
 
   it("return 200 ", async () => {
-    const result3 = await agent
-      .get("/security/devices")
-      .set("Cookie", cookie)
-      const hhh = result3
-      
-      expect(result3.body).toEqual([
+    const result3 = await agent.get("/security/devices").set("Cookie", cookie);
+    const hhh = result3;
+
+    expect(result3.body).toEqual([
       {
         ip: expect.any(String),
         title: expect.any(String),
@@ -1831,7 +1829,93 @@ describe.skip("SECURITYGET", () => {
     ]);
   });
 });
+describe.skip("SECURITYDELETE", () => {
+  beforeAll(async () => {
+    await agent.delete("/testing/all-data").expect(204);
 
+    const result = await agent
+      .post("/users")
+      .send({
+        login: "markooo",
+        password: "123456",
+        email: "markdlnv@gmail.com",
+      })
+      .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+      .expect(201);
+
+    const result2 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(200);
+
+    cookie = result2.get("Set-Cookie");
+  });
+
+  it("return 200 ", async () => {
+    const result1 = await agent
+      .get("/security/devices")
+      .set("Cookie", cookie)
+      .expect(200);
+    const device1 = result1.body.deviceId;
+
+    const result2 = await agent
+      .delete("/security/devices")
+      .set("Cookie", cookie)
+      .expect(204);
+  });
+});
+describe("SECURITYDELETEBY IDDEVICE", () => {
+  beforeAll(async () => {
+    await agent.delete("/testing/all-data").expect(204);
+
+    const result = await agent
+      .post("/users")
+      .send({
+        login: "markooo",
+        password: "123456",
+        email: "markdlnv@gmail.com",
+      })
+      .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+      .expect(201);
+
+    const result2 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(200);
+
+    cookie = result2.get("Set-Cookie");
+
+    const result77 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(200);
+    cookie2 = result77.get("Set-Cookie");
+  });
+
+  it("return 204 ", async () => {
+    const result1 = await agent
+      .get("/security/devices")
+      .set("Cookie", cookie)
+      .expect(200);
+
+      const device1 = result1.body[0].deviceId;
+      
+      const result2 = await agent
+      .delete("/security/devices/" + device1)
+      .set("Cookie", cookie2)
+      .expect(204);
+      console.log(result2);
+    });
+});
 
 // describe.skip("comments", () => {
 //   beforeEach(() => jest.setTimeout(8000)),

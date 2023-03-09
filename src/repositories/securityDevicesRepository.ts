@@ -23,7 +23,7 @@ export const securityDevicesRepository = {
       userId: userId,
       lastActiveDate: { $ne: iat.toString() },
     });
-    return result.deletedCount > 0;
+    return true;
   },
   async deleteSessionLogout(userId: string, iat: number) {
     const result = await securityDevicesCollections.deleteOne({
