@@ -29,12 +29,13 @@ export const RefreshTokenMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (!req.cookies.refreshToken) {
-    res.send(401);
+  const refreshToken = req.cookies.refreshToken
+  if (!refreshToken) {
+    res.sendStatus(401);
     return;
   }
   const verify: JwtPayload | null = await jwtService.verifyToken(
-    req.cookies.refreshToken!
+    refreshToken
   );
  
   if (verify) {
@@ -42,6 +43,6 @@ export const RefreshTokenMiddleware = async (
     next();
     return;
   } else {
-    res.send(401);
+    res.sendStatus(401);
   }
 };

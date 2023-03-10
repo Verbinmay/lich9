@@ -28,7 +28,7 @@ export const securityDevicesRepository = {
   async deleteSessionLogout(userId: string, deviceId: string) {
     const result = await securityDevicesCollections.deleteOne({
       userId: userId,
-      deviceId:deviceId,
+      deviceId: deviceId,
     });
     return result.deletedCount === 1;
   },
