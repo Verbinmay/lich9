@@ -1,6 +1,8 @@
 import { beforeEach } from "node:test";
 import supertest from "supertest";
 import app from "../../src/index";
+import {faker} from "@faker-js/faker"
+import { usersRepository } from "../../src/repositories/usersRepository";
 
 const agent = supertest.agent(app);
 let cookie: string[] = [];
@@ -1522,22 +1524,20 @@ describe.skip("auth", () => {
         password: "123456",
       })
       .expect(200);
-      cookie = result2.get("Set-Cookie");
+    cookie = result2.get("Set-Cookie");
 
     expect(result2.body).toEqual({
       accessToken: expect.any(String),
     });
-
   });
 });
-
 
 describe.skip("authERROR", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data");
-    jest.setTimeout(80000)
+    jest.setTimeout(80000);
   });
-  jest.setTimeout(800000)
+  jest.setTimeout(800000);
   it("return 429 POSTAUTH", async () => {
     const result = await agent
       .post("/users")
@@ -1557,7 +1557,7 @@ describe.skip("authERROR", () => {
       })
       .expect(200);
 
-      const result3 = await agent
+    const result3 = await agent
       .post("/auth/login")
       .send({
         loginOrEmail: "markdlnv@gmail.com",
@@ -1565,7 +1565,7 @@ describe.skip("authERROR", () => {
       })
       .expect(200);
 
-      const result4 = await agent
+    const result4 = await agent
       .post("/auth/login")
       .send({
         loginOrEmail: "markdlnv@gmail.com",
@@ -1573,7 +1573,7 @@ describe.skip("authERROR", () => {
       })
       .expect(200);
 
-      const result5 = await agent
+    const result5 = await agent
       .post("/auth/login")
       .send({
         loginOrEmail: "markdlnv@gmail.com",
@@ -1581,7 +1581,7 @@ describe.skip("authERROR", () => {
       })
       .expect(200);
 
-      const result6 = await agent
+    const result6 = await agent
       .post("/auth/login")
       .send({
         loginOrEmail: "markdlnv@gmail.com",
@@ -1589,7 +1589,7 @@ describe.skip("authERROR", () => {
       })
       .expect(200);
 
-      const result7 = await agent
+    const result7 = await agent
       .post("/auth/login")
       .send({
         loginOrEmail: "markdlnv@gmail.com",
@@ -1899,7 +1899,76 @@ describe.skip("SECURITYGET", () => {
     ]);
   });
 });
-describe("SECURITYDELETE", () => {
+describe("CHECK LOGOUT LOGIC", () => {
+  const countOfDevices = 4;
+
+  beforeAll(async () => {
+    await agent.delete("/testing/all-data").expect(204);
+
+    const createUserInputData = {
+      login: "markooo",
+      password: "123456",
+      email: "markdlnv@gmail.com",
+    };
+    const createUserResponse = await agent
+      .post("/users")
+      .set("Authorization", "Basic YWRtaW46cXdlcnR5")
+      .send(createUserInputData);
+
+    expect(createUserResponse.status).toBe(201);
+
+    const user = { ...createUserInputData, ...createUserResponse.body };
+
+    const userRefreshTokens: any[] = []
+
+    for (let i = 0; i < countOfDevices; i++) {
+      const loginUserResponse = await agent.post("/auth/login")
+      .set('User-Agent', faker.internet.userAgent())
+      .send({
+        loginOrEmail: user.login,
+        password: user.password,
+      });
+
+      expect(loginUserResponse.status).toBe(200);
+      const { accessToken } = loginUserResponse.body;
+      expect(accessToken).toBeDefined();
+      const cookie = loginUserResponse.get("Set-Cookie");
+      expect(cookie).toBeDefined();
+      user.accessToken = accessToken;
+      user.cookie = cookie;
+      userRefreshTokens.push(cookie)
+    }
+    expect(userRefreshTokens).toHaveLength(countOfDevices)
+    expect.setState({ user, userRefreshTokens });
+  });
+
+  it(`return 200 and all devices (${countOfDevices})`, async () => {
+    const { user } = expect.getState();
+    const devicesListResponse = await agent
+      .get("/security/devices")
+      .set("Cookie", user.cookie);
+
+
+    expect(devicesListResponse.status).toBe(200);
+    expect(devicesListResponse.body).toHaveLength(countOfDevices);
+  });
+  it('should logout user first device', async () => {
+    const { userRefreshTokens, user } = expect.getState();
+    
+    const logoutResponse = await agent.post('/auth/logout').set("Cookie", userRefreshTokens[0]).send({})
+    expect(logoutResponse.status).toBe(204)
+
+
+    const devicesListResponse = await agent
+      .get("/security/devices")
+      .set("Cookie", user.cookie);
+
+
+    expect(devicesListResponse.status).toBe(200);
+    expect(devicesListResponse.body).toHaveLength(countOfDevices - 1);
+  })
+});
+describe.skip("SECURITYDELETE", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 
@@ -1977,14 +2046,13 @@ describe.skip("SECURITYDELETEBY IDDEVICE", () => {
       .set("Cookie", cookie)
       .expect(200);
 
-      const device1 = result1.body[0].deviceId;
-      
-      const result2 = await agent
+    const device1 = result1.body[0].deviceId;
+
+    const result2 = await agent
       .delete("/security/devices/" + device1)
       .set("Cookie", cookie2)
       .expect(204);
-      
-    });
+  });
 });
 
 // describe.skip("comments", () => {
