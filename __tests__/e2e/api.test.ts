@@ -1899,7 +1899,7 @@ describe.skip("SECURITYGET", () => {
     ]);
   });
 });
-describe.skip("SECURITYDELETE", () => {
+describe("SECURITYDELETE", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 
@@ -1937,7 +1937,7 @@ describe.skip("SECURITYDELETE", () => {
       .expect(204);
   });
 });
-describe("SECURITYDELETEBY IDDEVICE", () => {
+describe.skip("SECURITYDELETEBY IDDEVICE", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 

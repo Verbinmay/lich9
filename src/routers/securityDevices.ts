@@ -34,7 +34,7 @@ securityRouter.delete(
   async (req: Request, res: Response) => {
     const sessionsDelete: boolean = await securityDevicesService.deleteSessions(
       req.user.userId,
-      req.user.iat
+      req.user.deviceId
     );
     sessionsDelete ? res.send(204) : res.send(401);
   }

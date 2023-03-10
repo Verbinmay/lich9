@@ -12,16 +12,16 @@ export const securityDevicesRepository = {
   async checkRefreshTokenEqual(iat: number, deviceId: string, userId: string) {
     const result: SecurityDevicesDBModel | null =
       await securityDevicesCollections.findOne({
-        lastActiveDate: iat.toString(),
+        lastActiveDate: new Date(iat*1000).toISOString(),
         deviceId: deviceId,
         userId: userId,
       });
     return result != null;
   },
-  async deleteSessions(userId: string, iat: number) {
+  async deleteSessions(userId: string, deviceId: string) {
     const result = await securityDevicesCollections.deleteMany({
       userId: userId,
-      lastActiveDate: { $ne: iat.toString() },
+      deviceId: { $ne: deviceId },
     });
     return true;
   },

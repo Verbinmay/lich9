@@ -4,10 +4,10 @@ import { securityDevicesRepository } from "../repositories/securityDevicesReposi
 import { SecurityDevicesDBModel } from "../types/dbType";
 
 export const securityDevicesService = {
-  async deleteSessions(userId: string, iat: number) {
+  async deleteSessions(userId: string, deviceId: string) {
     const result: boolean = await securityDevicesRepository.deleteSessions(
       userId,
-      iat
+      deviceId
     );
     return result;
   },
