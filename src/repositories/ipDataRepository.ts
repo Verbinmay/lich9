@@ -15,7 +15,7 @@ export const ipDataRepository = {
 
       console.log(result.length)
 
-    if (result.length > attempts) {
+    if (result.length >= attempts) {
       return false;
     } else {
       return true;
