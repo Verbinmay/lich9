@@ -25,10 +25,10 @@ export const securityDevicesRepository = {
     });
     return true;
   },
-  async deleteSessionLogout(userId: string, iat: number) {
+  async deleteSessionLogout(userId: string, deviceId: string) {
     const result = await securityDevicesCollections.deleteOne({
       userId: userId,
-      lastActiveDate: iat.toString(),
+      deviceId:deviceId,
     });
     return result.deletedCount === 1;
   },

@@ -79,7 +79,7 @@ authRouter.post(
   RefreshTokenMiddleware,
   async (req: Request, res: Response) => {
     const tokenRevoked = await securityDevicesService.deleteSessionLogout(
-      req.user.iat,
+      req.user.deviceId,
       req.user.userId
     );
     if (tokenRevoked) {

@@ -11,10 +11,10 @@ export const securityDevicesService = {
     );
     return result;
   },
-  async deleteSessionLogout(userId: string, iat: number) {
+  async deleteSessionLogout(userId: string, deviceId: string) {
     const result: boolean = await securityDevicesRepository.deleteSessionLogout(
       userId,
-      iat
+      deviceId
     );
     return result;
   },
