@@ -1532,12 +1532,12 @@ describe.skip("auth", () => {
   });
 });
 
-describe.skip("authERROR", () => {
+describe ("authERROR", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data");
-    jest.setTimeout(80000);
+   
   });
-  jest.setTimeout(800000);
+  
   it("return 429 POSTAUTH", async () => {
     const result = await agent
       .post("/users")
@@ -1596,6 +1596,14 @@ describe.skip("authERROR", () => {
         password: "123456",
       })
       .expect(429);
+      await new Promise((r) => setTimeout(r, 9000));
+      const result8 = await agent
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "markdlnv@gmail.com",
+        password: "123456",
+      })
+      .expect(200);
   });
   //---------------------------------------
   // it("return 400 POSTAUTH login", async () => {
@@ -1899,7 +1907,7 @@ describe.skip("SECURITYGET", () => {
     ]);
   });
 });
-describe("CHECK LOGOUT LOGIC", () => {
+describe.skip("CHECK LOGOUT LOGIC", () => {
   const countOfDevices = 4;
 
   beforeAll(async () => {

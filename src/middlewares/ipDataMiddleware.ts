@@ -15,9 +15,9 @@ export const ipDataMiddleware = async (
     route,
   );
   if (!ipDataCheck) {
-    res.send(429);
+    res.sendStatus(429);
     return;
   }
   const ipDataAdd: boolean = await ipDataRepository.addIpData(req.ip, route);
-  ipDataAdd ? next() : res.send(429);
+  ipDataAdd ? next() : res.sendStatus(429);
 };
