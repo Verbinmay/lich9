@@ -8,9 +8,10 @@ export const ipDataRepository = {
     attempts: number,
     route: string
   ) {
+  
     const dateInMLS = Date.now() - timeInSec * 1000;
     const result: Array<IpDataDBModel> = await ipDataCollections
-      .find({ ip: ip, route: route, data: { $gt: dateInMLS } })
+      .find({ ip: ip, route: route, data: { $gte: dateInMLS } })
       .toArray();
 
       console.log(result.length)
@@ -27,6 +28,7 @@ export const ipDataRepository = {
       data: Date.now(),
       route: route,
     };
+    console.log(newIpData.data);
     const result = await ipDataCollections.insertOne(newIpData);
     return result.insertedId ? true : false;
   },
