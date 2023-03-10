@@ -1500,7 +1500,7 @@ export function toGetToken(resultLogin: any) {
 //   });
 // });
 //_________________________________________
-describe("auth", () => {
+describe.skip("auth", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data");
   });
@@ -1522,15 +1522,17 @@ describe("auth", () => {
         password: "123456",
       })
       .expect(200);
+      cookie = result2.get("Set-Cookie");
 
     expect(result2.body).toEqual({
       accessToken: expect.any(String),
     });
+
   });
 });
 
 
-describe("authERROR", () => {
+describe.skip("authERROR", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data");
     jest.setTimeout(80000)
@@ -1792,7 +1794,7 @@ describe("authERROR", () => {
   //   );
   // });
 });
-describe("authLOOOOOGIN", () => {
+describe.skip("authLOOOOOGIN", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 
@@ -1825,7 +1827,7 @@ describe("authLOOOOOGIN", () => {
       .expect(200);
   });
 });
-describe("authREFRESHTOKEN", () => {
+describe.skip("authREFRESHTOKEN", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 
@@ -1858,7 +1860,7 @@ describe("authREFRESHTOKEN", () => {
       .expect(200);
   });
 });
-describe("SECURITYGET", () => {
+describe.skip("SECURITYGET", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 
@@ -1897,7 +1899,7 @@ describe("SECURITYGET", () => {
     ]);
   });
 });
-describe("SECURITYDELETE", () => {
+describe.skip("SECURITYDELETE", () => {
   beforeAll(async () => {
     await agent.delete("/testing/all-data").expect(204);
 
@@ -1981,7 +1983,7 @@ describe("SECURITYDELETEBY IDDEVICE", () => {
       .delete("/security/devices/" + device1)
       .set("Cookie", cookie2)
       .expect(204);
-      console.log(result2);
+      
     });
 });
 

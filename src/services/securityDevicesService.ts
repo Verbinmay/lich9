@@ -46,8 +46,8 @@ export const securityDevicesService = {
     userId: string
   ) {
     const newSession = {
-      lastActiveDate: iat.toString(),
-      expirationDate: expirationDate.toString(),
+      lastActiveDate: new Date(iat*1000).toISOString(),
+      expirationDate: new Date(expirationDate*1000).toISOString(),
       ip: ip,
       title: title,
       deviceId: deviceId,
