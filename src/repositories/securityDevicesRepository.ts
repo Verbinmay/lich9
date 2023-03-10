@@ -50,14 +50,14 @@ export const securityDevicesRepository = {
   async updateSessionRefreshInfo(iatOldSession: number, decoded: JwtPayload) {
     const result = await securityDevicesCollections.updateOne(
       {
-        lastActiveDate: iatOldSession.toString(),
+        lastActiveDate: new Date(iatOldSession * 1000).toISOString(),
         deviceId: decoded.deviceId!,
         userId: decoded.userId!,
       },
       {
         $set: {
-          lastActiveDate: decoded.iat!.toString(),
-          expireDate: decoded.exp!.toString(),
+          lastActiveDate: new Date(decoded.iat! * 1000).toISOString(),
+          expireDate: new Date(decoded.exp! * 1000).toISOString(),
         },
       }
     );
